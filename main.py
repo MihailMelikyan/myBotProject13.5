@@ -4,11 +4,11 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 import asyncio
 
-api = ''
+api = '7701233404:AAFMRvBKUoY2KKK1m3KGz7PoJeuVZR3P6yE'
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
-kb = ReplyKeyboardMarkup()
-button1 = KeyboardButton(text="Расчитать")
+kb = ReplyKeyboardMarkup(resize_keyboard=True)
+button1 = KeyboardButton(text="Расcчитать")
 button2 = KeyboardButton(text="Информация")
 kb.row(button1,button2)
 
@@ -21,10 +21,14 @@ class UserState(StatesGroup):
 
 @dp.message_handler(commands=['start'])
 async def set_age(message):
-    await message.answer('Привет я бот помошник и я помогу тебе считать каллории!', reply_markup=kb)
+    await message.answer('Привет я бот помощник и я помогу тебе считать калории!', reply_markup=kb)
+
+@dp.message_handler(text='Информация')
+async def info(message):
+    await message.answer('Бот поможет следить за калориями v.1.0',reply_markup=kb)
 
 
-@dp.message_handler(text='Расчитать')
+@dp.message_handler(text='Расcчитать')
 async def set_growth(message):
     await message.answer('Введите свой возраст:', reply_markup=kb)
     await UserState.age.set()
@@ -49,7 +53,7 @@ async def send_calories(message, state):
     await state.update_data(weight=message.text)
     data = await state.get_data()
     calorie_norm = 10 * int(data['weight']) + 6.25 * int(data['growth']) - 5 * int(data['age'])
-    await message.answer(f'Ваша норма каллорий {calorie_norm}')
+    await message.answer(f'Ваша норма калорий {calorie_norm}')
     await state.finish()
 
 
